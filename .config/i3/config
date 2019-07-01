@@ -33,9 +33,10 @@ floating_modifier $mod
 bindsym $mod+Return exec i3-sensible-terminal
 
 # kill focused window
-bindsym $mod+Shift+q kill
+# bindsym $mod+Shift+q kill
+bindsym $mod+q kill
 
-# start dmenu (a program launcher)
+# start rofi (a program launcher)
 bindsym $mod+d exec rofi -show run
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
@@ -94,16 +95,16 @@ bindsym $mod+a focus parent
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "Terminal "
-set $ws2 "Web Browser "
-set $ws3 "Code "
-set $ws4 "Steam "
-set $ws5 "Chat "
+set $ws1 "1: Terminal "
+set $ws2 "2: Web Browser "
+set $ws3 "3: Code "
+set $ws4 "4: Steam "
+set $ws5 "5: Chat "
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
 set $ws9 "9"
-set $ws10 "Music "
+set $ws10 "10: Music "
 
 # Load programs on workspaces
 assign [class="URxvt"] $ws1
@@ -111,7 +112,8 @@ assign [class="Firefox"] $ws2
 assign [class="code-oss"] $ws3
 assign [class="Steam"] $ws4
 assign [title="weechat"] $ws5
-assign [class="Spotify"] $ws10
+assign [class="Hexchat"] $ws5
+for_window [class="Spotify"] move to workspace $ws10
 
 # switch to workspace
 bindsym $mod+1 workspace $ws1
@@ -183,26 +185,44 @@ set $urgent-text-color		#1f3c43
 
 # Window colors
 #			border			background		text			indicator
-client.focused		$bg-color		$bg-color		$text-color		#00ff00
-client.unfocused	$inactive-bg-color	$inactive-bg-color	$inactive-text-color	#00ff00
-client.focused_inactive	$inactive-bg-color	$inactive-bg-color	$inactive-text-color	#00ff00
-client.urgent		$urgent-bg-color	$urgent-bg-color	$urgent-text-color	#00ff00
-
-hide_edge_borders both
+client.focused		$bg-color		$bg-color		$text-color		$bg-color
+client.unfocused	$inactive-bg-color	$inactive-bg-color	$inactive-text-color	$inactive-bg-color
+client.focused_inactive	$inactive-bg-color	$inactive-bg-color	$inactive-text-color	$inactive-bg-color
+client.urgent		$urgent-bg-color	$urgent-bg-color	$urgent-text-color	$urgent-bg-color
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bar {
-        status_command i3status
-	colors {
-		background $inactive-bg-color
-		separator #757575
-		#			border			background		text
-		focused_workspace	$bg-color		$bg-color		$inactive-text-color
-		inactive_workspace	$inactive-bg-color	$inactive-bg-color	$inactive-text-color
-		urgent_workspace	$urgent-bg-color	$urgent-bg-color	$urgent-text-color
-	}
-}
+#bar {
+#        status_command i3status
+#	colors {
+#		background $inactive-bg-color
+#		separator #757575
+#		#			border			background		text
+#		focused_workspace	$bg-color		$bg-color		$inactive-text-color
+#		inactive_workspace	$inactive-bg-color	$inactive-bg-color	$inactive-text-color
+#		urgent_workspace	$urgent-bg-color	$urgent-bg-color	$urgent-text-color
+#	}
+#}
 
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always feh --bg-scale /home/sp1icer/backgrounds/chtulhu.png 
+exec_always compton -f
 exec urxvt
+
+# i3gaps settings
+
+# Defaults
+for_window[class="^.*"] border pixel 7
+gaps inner 15
+gaps outer 15
+
+# inc/dec gaps
+bindsym $mod+z		gaps outer current plus 5
+bindsym $mod+shift+z	gaps outer current minus 5
+bindsym $mod+x		gaps inner current plus 5
+bindsym $mod+shift+x	gaps inner current minus 5
+
+# Reset
+bindsym $mod+shift+t	gaps inner all set 20; gaps outer all set 15
+
+hide_edge_borders both
