@@ -197,3 +197,4 @@ bar {
 }
 
 exec_always feh --bg-scale /home/sp1icer/backgrounds/chtulhu.png 
+exec urxvt
